@@ -1,8 +1,9 @@
-
 music_notes = ["A", "A#","B","C", "C#", "D", "D#", "E", "F","F#", "G", "G#"]
-
 major_scale_formula = ["W","W","H","W","W","W","H"]
 minor_scale_formula = ["W","H","W","W","H","W","W"]
+minor_scales_that_use_flats = {"D","G","C","F","Ab","Eb","Bb"}
+major_scales_that_use_flats = {"F","Bb","Eb","Ab","Db"}
+major_scales_that_use_sharps = {"F#","B","E","A","D","G","A#","C#","D#","G#"}
 
 sharp_to_flat_conversion_map = {
     "A#": "Bb",
@@ -12,12 +13,18 @@ sharp_to_flat_conversion_map = {
     "G#": "Ab"
 }
 
+flat_to_sharp_conversion_map = {
+    "Bb": "A#",
+    "Db": "C#",
+    "Eb": "D#",
+    "Gb": "F#",
+    "Ab": "G#"
+}
+
 def is_sharp(note: str) -> bool:
     if len(note) == 1:
         return False
-    
     return note[1] == "#"
-    
 
 def whole_step_after_note(current_note: str) -> str:
     current_note_index_in_music_notes = music_notes.index(current_note)
@@ -30,10 +37,9 @@ def half_step_after_note(current_note: str) -> str:
     return music_notes[half_step_after]
 
 
-
-def generate_major_scale(key: str) -> str:
+def generate_major_scale(key: str) -> list[str]:
     result = []
-    
+    uses_sharps = key in major_scales_that_use_sharps
     current_key = key
     result.append(current_key)
     
@@ -42,16 +48,20 @@ def generate_major_scale(key: str) -> str:
             current_key = whole_step_after_note(current_key)
         else:
             current_key = half_step_after_note(current_key)
-            
+ 
         result.append(current_key)
+
             
-    return "".join(result)
+    return result
             
+def output_scale_clean(scale: str):
+    
+    for note in scale:
+        print(note + "  ", end="")
+    print()
         
-def generate_minor_scale(key: str) -> str:
+def generate_minor_scale(key: str) -> list[str]:
     result = []
-    
-    
     
     current_key = key
     result.append(current_key)
@@ -64,8 +74,12 @@ def generate_minor_scale(key: str) -> str:
             
         result.append(current_key)
             
-    return "".join(result)
+    return result
 
 lol = "C"
 
-print(generate_minor_scale("C"))
+output_scale_clean(generate_major_scale("A#"))
+output_scale_clean(generate_major_scale("C#"))
+output_scale_clean(generate_major_scale("D#"))
+output_scale_clean(generate_major_scale("F#"))
+output_scale_clean(generate_major_scale("G#"))
