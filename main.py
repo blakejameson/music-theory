@@ -5,7 +5,7 @@ minor_scales_that_use_flats = {"D","G","C","F","Ab","Eb","Bb"}
 major_scales_that_use_flats = {"F","Bb","Eb","Ab","Db"}
 major_scales_that_use_sharps = {"F#","B","E","A","D","G","A#","C#","G#"}
 
-major_keys_that_should_be_converted = {"D#","E#", "A#", "B#", "C#", "G#"}
+major_keys_that_should_be_converted = {"D#","E#", "A#", "B#", "C#", "G#", "Cb", "Fb"}
 
 # D# maj should become Eb maj
 # E# maj should become F major
@@ -15,14 +15,16 @@ major_keys_that_should_be_converted = {"D#","E#", "A#", "B#", "C#", "G#"}
 # G# maj should be Ab major
 
 
-sharp_to_flat_conversion_map = {
+major_key_conversion_map = {
     "A#": "Bb",
     "C#": "Db",
     "D#": "Eb",
     "F#": "Gb",
     "G#": "Ab",
     "B#": "C",
-    "E#": "F"
+    "E#": "F",
+    "Cb": "B",
+    "Fb": "E"
 }
 
 flat_to_sharp_conversion_map = {
@@ -39,7 +41,6 @@ def is_sharp(note: str) -> bool:
     return note[1] == "#"
 
 def whole_step_after_note(current_note: str) -> str:
-    
     if current_note in flat_to_sharp_conversion_map:
         current_note = flat_to_sharp_conversion_map[current_note]
     
@@ -48,7 +49,6 @@ def whole_step_after_note(current_note: str) -> str:
     return music_notes[whole_step_after]
 
 def half_step_after_note(current_note: str) -> str:
-    
     if current_note in flat_to_sharp_conversion_map:
         current_note = flat_to_sharp_conversion_map[current_note]
         
@@ -63,7 +63,7 @@ def generate_major_scale(key: str) -> list[str]:
     current_key = key
     
     if current_key in major_keys_that_should_be_converted:
-        current_key = sharp_to_flat_conversion_map[current_key]
+        current_key = major_key_conversion_map[current_key]
         
     uses_flats = key_uses_flats(current_key)
     
@@ -76,7 +76,7 @@ def generate_major_scale(key: str) -> list[str]:
             current_key = half_step_after_note(current_key)
 
         if uses_flats and len(current_key) == 2 and current_key[1] == "#":
-            current_key = sharp_to_flat_conversion_map[current_key]
+            current_key = major_key_conversion_map[current_key]
             
         result.append(current_key)
     
@@ -87,19 +87,17 @@ def generate_major_scale(key: str) -> list[str]:
     return result
 
 def key_uses_flats(key: str):
-    
     if key == "F":
         return True
-    
     if len(key) == 1:
         return False
-    
     return key[1] == "b"
             
 def output_scale_clean(scale: str):
-    
+    print("\t\tThe " + scale[0] + " major scale:")
     for note in scale:
         print("%3s   " % (note), end="")
+    print()
     print()
         
 def generate_minor_scale(key: str) -> list[str]:
@@ -115,12 +113,7 @@ def generate_minor_scale(key: str) -> list[str]:
             current_key = half_step_after_note(current_key)
             
         result.append(current_key)
-            
     return result
-
-lol = "C"
-
-
 
 for note in music_notes:
     output_scale_clean(generate_major_scale(note))
