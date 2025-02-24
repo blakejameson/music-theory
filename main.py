@@ -119,6 +119,17 @@ def output_scale_clean(scale: str, mode: str):
         print("%3s   " % (note), end="")
     print()
     print()
+    
+    
+def output_notes_in_chord(notes: list[str]):
+    okay = ""
+    
+    print("\nNotes in Chord:\n")
+    for note in notes:
+        okay += note
+        okay += "  "
+    
+    print(okay)
         
 def generate_major_scale(key: str) -> list[str]:
     result = []
@@ -209,88 +220,88 @@ def generate_melodic_minor_scale(key: str) -> list[str]:
     
     return result
 
-def generate_major_chord(root: str) -> str:
+def generate_major_chord(root: str) -> list[str]:
     major_scale = generate_major_scale(root)
     
     list_notes = [major_scale[0], major_scale[2], major_scale[4]]
-    return "".join(list_notes)
+    return list_notes
 
-def generate_major7_chord(root: str) -> str:
+def generate_major7_chord(root: str) -> list[str]:
     major_scale = generate_major_scale(root)
     
     list_notes = [major_scale[0], major_scale[2], major_scale[4], major_scale[6]]
-    return "".join(list_notes)
+    return list_notes
 
-def generate_major9_chord(root: str) -> str:
+def generate_major9_chord(root: str) -> list[str]:
     major_scale = generate_major_scale(root)
     
     list_notes = [major_scale[0], major_scale[2], major_scale[4], major_scale[6], major_scale[1]]
-    return "".join(list_notes)
+    return list_notes
 
-def generate_minor_chord(root: str) -> str:
+def generate_minor_chord(root: str) -> list[str]:
     minor_scale = generate_minor_scale(root)
     
     list_notes = [minor_scale[0], minor_scale[2], minor_scale[4]]
-    return "".join(list_notes)
+    return list_notes
 
-def generate_minor7_chord(root: str) -> str:
+def generate_minor7_chord(root: str) -> list[str]:
     minor_scale = generate_minor_scale(root)
     
     list_notes = [minor_scale[0], minor_scale[2], minor_scale[4], minor_scale[6]]
-    return "".join(list_notes)
+    return list_notes
 
-def generate_minor9_chord(root: str) -> str:
+def generate_minor9_chord(root: str) -> list[str]:
     minor_scale = generate_minor_scale(root)
     major_scale = generate_major_scale(root)
     
     list_notes = [minor_scale[0], minor_scale[2], minor_scale[4], minor_scale[6], major_scale[1]]
-    return "".join(list_notes)
+    return list_notes
 
 
-def generate_sus2_chord(root: str) -> str:
+def generate_sus2_chord(root: str) -> list[str]:
     major_scale = generate_major_scale(root)
     
     list_notes = [major_scale[0], major_scale[1], major_scale[4]]
-    return "".join(list_notes)
+    return list_notes
 
-def generate_sus4_chord(root: str) -> str:
+def generate_sus4_chord(root: str) -> list[str]:
     major_scale = generate_major_scale(root)
     
     list_notes = [major_scale[0], major_scale[3], major_scale[4]]
-    return "".join(list_notes)
+    return list_notes
 
-def generate_dominant7_chord(root: str) -> str:
+def generate_dominant7_chord(root: str) -> list[str]:
     major_scale = generate_major_scale(root)
     minor_scale = generate_minor_scale(root)
     
     list_notes = [major_scale[0], major_scale[2], major_scale[4], minor_scale[6]]
-    return "".join(list_notes)
+    return list_notes
 
-def generate_5_chord(root: str) -> str:
+def generate_5_chord(root: str) -> list[str]:
     major_scale = generate_major_scale(root)
     
     list_notes = [major_scale[0], major_scale[4]]
-    return "".join(list_notes)
+    return list_notes
 
-def generate_add9_chord(root: str) -> str:
+def generate_add9_chord(root: str) -> list[str]:
     major_scale = generate_major_scale(root)
     
     list_notes = [major_scale[0], major_scale[2], major_scale[4], major_scale[1]]
-    return "".join(list_notes)
+    return list_notes
 
-def generate_maj6_chord(root: str) -> str:
+def generate_maj6_chord(root: str) -> list[str]:
     major_scale = generate_major_scale(root)
     
     list_notes = [major_scale[0], major_scale[2], major_scale[4], major_scale[5]]
-    return "".join(list_notes)
+    return list_notes
 
-def generate_min6_chord(root: str) -> str:
+def generate_min6_chord(root: str) -> list[str]:
     major_scale = generate_major_scale(root)
     
     minor_scale = generate_minor_scale(root)
     
     list_notes = [minor_scale[0], minor_scale[2], minor_scale[4], major_scale[5]]
-    return "".join(list_notes)
+    return list_notes
 
 
 def display_options() -> None:
@@ -319,15 +330,21 @@ def learn_notes_in_chord() -> None:
     result = "\n".join("%-30s %-10s "%(x,y) for x, y in zip(chord_types, examples))
     print(result, end="\n\n\n")
     
-    # capture chord choice
-    chord_choice = input("Enter a chord of your choice, and you will be returned the notes that make up that chord: \n")
     
-    while not is_valid_chord(chord_choice):
-        print("Invalid chord entered. Please follow the convention shown above to enter a valid chord.")
-        chord_choice = input("Enter a chord: ")
-        
-    notes = decipher_chord_and_return_notes(chord_choice)
-    print(notes)
+    while True:
+        # capture chord choice
+        chord_choice = input("\nEnter a chord of your choice, and you will be returned the notes that make up that chord: \n")
+        if chord_choice == "q" or chord_choice =="quit":
+            break
+        while not is_valid_chord(chord_choice):
+            print("Invalid chord entered. Please follow the convention shown above to enter a valid chord.")
+            chord_choice = input("Enter a chord: ")
+            if chord_choice == "q" or chord_choice =="quit":
+                break
+            
+        notes = decipher_chord_and_return_notes(chord_choice)
+        output_notes_in_chord(notes)
+        print()
     
     
 def is_valid_chord(chord_input: str) -> bool:
@@ -346,7 +363,7 @@ def decipher_chord_and_return_notes(chord: str) -> None:
     # Length 2 means it is either a minor chord (ex: Cm), a major chord (ex: F#, dominant 7, fifth, or 6 aka maj6)
     elif len(chord) == 2:
         if chord[1] == "#" or chord[1] == "b":
-            notes = generate_major_chord(chord[0])
+            notes = generate_major_chord(chord)
             return notes
         
         elif chord[1] == "m":
@@ -362,7 +379,7 @@ def decipher_chord_and_return_notes(chord: str) -> None:
             return notes
         
         elif chord[1] == "6":
-            notes = generate_maj6_chord(chord)
+            notes = generate_maj6_chord(chord[0])
             return notes
         
     elif "maj7" in chord:
@@ -445,6 +462,11 @@ def decipher_chord_and_return_notes(chord: str) -> None:
     elif "maj" in chord:
         index_maj_starts_at = chord.find("maj")
         notes = generate_major_chord(chord[:index_maj_starts_at])
+        return notes
+    
+    elif "min" in chord:
+        index_min_starts_at = chord.find("min")
+        notes = generate_minor_chord(chord[:index_min_starts_at])
         return notes
         
         
