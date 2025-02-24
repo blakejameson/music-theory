@@ -1,6 +1,8 @@
 music_notes = ["A", "A#","B","C", "C#", "D", "D#", "E", "F","F#", "G", "G#"]
 major_scale_formula = ["W","W","H","W","W","W","H"]
 minor_scale_formula = ["W","H","W","W","H","W","W"]
+harmonic_minor_scale_formula = ["W","H","W","W", "H","T","H"]
+melodic_minor_scale_formula = ["W","H","W","W","W","W","H"]
 
 flat_to_sharp_conversion_map = {
     "Bb": "A#",
@@ -24,20 +26,14 @@ def is_sharp(note: str) -> bool:
     return note[1] == "#"
 
 def whole_step_after_note(current_note: str, usesFlats: bool) -> str:
-    
     if usesFlats and current_note in flat_to_sharp_conversion_map and not is_sharp(current_note):
         current_note = flat_to_sharp_conversion_map[current_note]
 
-    
     current_note_index_in_music_notes = music_notes.index(current_note)
     whole_step_after = (current_note_index_in_music_notes + 2) % 12
     return music_notes[whole_step_after]
 
 def half_step_after_note(current_note: str, usesFlats: bool) -> str:
-    
-    #if usesFlats and is_sharp(current_note):
-    #    current_note = sharp_to_flat_conversion_map[current_note]
-    
     if usesFlats and current_note in flat_to_sharp_conversion_map and not is_sharp(current_note):
         current_note = flat_to_sharp_conversion_map[current_note]
         
