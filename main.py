@@ -2,51 +2,20 @@ music_notes = ["A", "A#","B","C", "C#", "D", "D#", "E", "F","F#", "G", "G#"]
 major_scale_formula = ["W","W","H","W","W","W","H"]
 minor_scale_formula = ["W","H","W","W","H","W","W"]
 
-major_keys_that_should_be_converted = {"D#","E#", "A#", "B#", "C#", "G#", "Cb", "Fb", "F#"}
-
-# D# maj should become Eb maj
-# E# maj should become F major
-# A# maj should become Bb major
-# B# maj should become C major
-# C# maj should become Db major
-# G# maj should be Ab major
-
-major_key_conversion_map = {
-    "A#": "Bb",
-    "C#": "Db",
-    "D#": "Eb",
-    "F#": "Gb",
-    "G#": "Ab",
-    "B#": "C",
-    "E#": "F",
-    "Cb": "B",
-    "Fb": "E"
-}
-
-# Ab minor should be G# minor
-# Cb minor should be B minor
-# Db minor should be C# minor
-# D# minor should be Eb minor
-# Fb minor should be E minor
-# Gb minor should be F# minor
-
-minor_key_conversion_map = {
-    "Ab": "G#",
-    "Cb": "B",
-    "Db": "C#",
-    "D#": "Eb",
-    "Fb": "E",
-    "Gb": "F#"
-    
-    
-}
-
 flat_to_sharp_conversion_map = {
     "Bb": "A#",
     "Db": "C#",
     "Eb": "D#",
     "Gb": "F#",
-    "Ab": "G#"
+    "Ab": "G#",
+}
+
+sharp_to_flat_conversion_map = {
+    "A#": "Bb",
+    "C#": "Db",
+    "D#": "Eb",
+    "F#": "Gb",
+    "G#": "Ab"
 }
 
 def is_sharp(note: str) -> bool:
@@ -54,16 +23,22 @@ def is_sharp(note: str) -> bool:
         return False
     return note[1] == "#"
 
-def whole_step_after_note(current_note: str) -> str:
-    if current_note in flat_to_sharp_conversion_map:
+def whole_step_after_note(current_note: str, usesFlats: bool) -> str:
+    
+    if usesFlats and current_note in flat_to_sharp_conversion_map and not is_sharp(current_note):
         current_note = flat_to_sharp_conversion_map[current_note]
+
     
     current_note_index_in_music_notes = music_notes.index(current_note)
     whole_step_after = (current_note_index_in_music_notes + 2) % 12
     return music_notes[whole_step_after]
 
-def half_step_after_note(current_note: str) -> str:
-    if current_note in flat_to_sharp_conversion_map:
+def half_step_after_note(current_note: str, usesFlats: bool) -> str:
+    
+    #if usesFlats and is_sharp(current_note):
+    #    current_note = sharp_to_flat_conversion_map[current_note]
+    
+    if usesFlats and current_note in flat_to_sharp_conversion_map and not is_sharp(current_note):
         current_note = flat_to_sharp_conversion_map[current_note]
         
     current_note_index_in_music_notes = music_notes.index(current_note)
@@ -87,8 +62,8 @@ def minor_key_uses_flats(key: str):
         return False
     return key[1] == "b"
             
-def output_scale_clean(scale: str):
-    print("\t\tThe " + scale[0] + " major scale:")
+def output_scale_clean(scale: str, mode: str):
+    print("\t\tThe " + scale[0] + f" {mode} scale:")
     for note in scale:
         print("%3s   " % (note), end="")
     print()
@@ -100,57 +75,87 @@ def generate_major_scale(key: str) -> list[str]:
     
     current_key = key
     
-    if current_key in major_keys_that_should_be_converted:
-        current_key = major_key_conversion_map[current_key]
-        
     uses_flats = major_key_uses_flats(current_key)
     
     result.append(current_key)
     
     for step in major_scale_formula:
         if step == "W":
-            current_key = whole_step_after_note(current_key)
+            current_key = whole_step_after_note(current_key, uses_flats)
         else:
-            current_key = half_step_after_note(current_key)
+            current_key = half_step_after_note(current_key, uses_flats)
 
-        if uses_flats and len(current_key) == 2 and current_key[1] == "#":
-            current_key = major_key_conversion_map[current_key]
-            
+        if uses_flats and is_sharp(current_key):
+            current_key = sharp_to_flat_conversion_map[current_key]
         result.append(current_key)
-    
-    if key == "F#":
-        desired_index = result.index("F")
-        result[desired_index] = "E#"
     
     return result
 
 
 def generate_minor_scale(key: str) -> list[str]:
     result = []
-    
     current_key = key
-    
-    
-    if current_key in minor_key_conversion_map:
-        current_key = minor_key_conversion_map[current_key]
-    
     uses_flats = minor_key_uses_flats(current_key)
-    
     
     result.append(current_key)
     
     for step in minor_scale_formula:
         if step == "W":
-            current_key = whole_step_after_note(current_key)
+            current_key = whole_step_after_note(current_key, uses_flats)
         else:
-            current_key = half_step_after_note(current_key)
-        
-        if uses_flats and len(current_key) == 2 and current_key[1] == "#":
-            current_key = minor_key_conversion_map[current_key]
-            
-            
+            current_key = half_step_after_note(current_key, uses_flats)
+    
+        if uses_flats and is_sharp(current_key):
+            current_key = sharp_to_flat_conversion_map[current_key]
         result.append(current_key)
     return result
 
-for note in music_notes:
-    output_scale_clean(generate_minor_scale(note))
+def main():
+    while True:
+        
+        selection = input("Enter your key of choice: ")
+        
+        choice = input("Enter major to see the major scale or minor to see the minor scale: ")
+        
+        if choice == "major":
+            output_scale_clean(generate_major_scale(selection), "major")
+            
+        else:
+            output_scale_clean(generate_minor_scale(selection), "minor")
+
+
+
+
+
+
+#for note in music_notes:
+    #output_scale_clean(generate_major_scale(note))
+    
+"""
+output_scale_clean(generate_major_scale("Bb"))
+output_scale_clean(generate_major_scale('Db'))
+output_scale_clean(generate_major_scale('Eb'))
+output_scale_clean(generate_major_scale('Gb'))
+output_scale_clean(generate_major_scale('Ab'))
+output_scale_clean(generate_major_scale('G#'))
+
+
+output_scale_clean(generate_major_scale('A'))
+output_scale_clean(generate_major_scale('B'))
+output_scale_clean(generate_major_scale('C'))
+output_scale_clean(generate_major_scale('D'))
+output_scale_clean(generate_major_scale('E'))
+output_scale_clean(generate_major_scale('F'))
+output_scale_clean(generate_major_scale('G'))
+
+output_scale_clean(generate_major_scale('A#'))
+output_scale_clean(generate_major_scale('C#'))
+output_scale_clean(generate_major_scale('D#'))
+output_scale_clean(generate_major_scale('F#'))
+output_scale_clean(generate_major_scale('G#'))
+"""
+
+for x in music_notes:
+    
+    output_scale_clean(generate_minor_scale(x),"minor")
+
