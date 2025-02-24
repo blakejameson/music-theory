@@ -1,0 +1,34 @@
+
+Brainstorming how user would interact with this command line based program
+
+Idea:
+
+User is prompted to choose from following
+
+1) Explore a specific key
+2) Learn the notes of a scale
+    - Be prompted to either select to learn the general structure of scales or just the notes of a particular scale
+    - If the latter is chosen, they will be prompted to enter their desired key. Then they will choose amongst the different modes of scales
+
+
+3) Learn the notes in a specific chord
+    - Types of chords supported:
+        - Major *
+        - Minor *
+        - Major7 *
+        - Minor7 *
+        - Dominant 7 *
+        - sus2 *
+        - sus4 *
+        - diminished
+        - augmented
+        - Fifth (Power chord) *
+        - added ninth (add9) *
+        - Sixth (aka Major 6)*
+        - Major9 *
+        - Minor 6 *
+        - Minor 9*
+
+    stretch goal: show these notes on a piano in console
+
+

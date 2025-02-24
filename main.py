@@ -4,6 +4,11 @@ minor_scale_formula = ["W","H","W","W","H","W","W"]
 harmonic_minor_scale_formula = ["W","H","W","W", "H","T","H"]
 melodic_minor_scale_formula = ["W","H","W","W","W","W","H"]
 
+major_scale_roman_numerals = ["I","ii","iii", "IV", "V", "vi", "vii\u00B0"]
+minor_scale_roman_numerals = ["i","ii\u00B0","III","iv","v","VI","VII"]
+
+# need to later do harmonic minor and melodic minor roman numerals
+
 flat_to_sharp_conversion_map = {
     "Bb": "A#",
     "Db": "C#",
@@ -162,25 +167,99 @@ def generate_melodic_minor_scale(key: str) -> list[str]:
     
     return result
 
+def generate_major_chord(root: str) -> str:
+    major_scale = generate_major_scale(root)
+    
+    list_notes = [major_scale[0], major_scale[2], major_scale[4]]
+    return "".join(list_notes)
+
+def generate_major7_chord(root: str) -> str:
+    major_scale = generate_major_scale(root)
+    
+    list_notes = [major_scale[0], major_scale[2], major_scale[4], major_scale[6]]
+    return "".join(list_notes)
+
+def generate_major9_chord(root: str) -> str:
+    major_scale = generate_major_scale(root)
+    
+    list_notes = [major_scale[0], major_scale[2], major_scale[4], major_scale[6], major_scale[1]]
+    return "".join(list_notes)
+
+def generate_minor_chord(root: str) -> str:
+    minor_scale = generate_minor_scale(root)
+    
+    list_notes = [minor_scale[0], minor_scale[2], minor_scale[4]]
+    return "".join(list_notes)
+
+def generate_minor7_chord(root: str) -> str:
+    minor_scale = generate_minor_scale(root)
+    
+    list_notes = [minor_scale[0], minor_scale[2], minor_scale[4], minor_scale[6]]
+    return "".join(list_notes)
+
+def generate_minor9_chord(root: str) -> str:
+    minor_scale = generate_minor_scale(root)
+    major_scale = generate_major_scale(root)
+    
+    list_notes = [minor_scale[0], minor_scale[2], minor_scale[4], minor_scale[6], major_scale[1]]
+    return "".join(list_notes)
 
 
+def generate_sus2_chord(root: str) -> str:
+    major_scale = generate_major_scale(root)
+    
+    list_notes = [major_scale[0], major_scale[1], major_scale[4]]
+    return "".join(list_notes)
+
+def generate_sus4_chord(root: str) -> str:
+    major_scale = generate_major_scale(root)
+    
+    list_notes = [major_scale[0], major_scale[3], major_scale[4]]
+    return "".join(list_notes)
+
+def generate_dominant7_chord(root: str) -> str:
+    major_scale = generate_major_scale(root)
+    minor_scale = generate_minor_scale(root)
+    
+    list_notes = [major_scale[0], major_scale[2], major_scale[4], minor_scale[6]]
+    return "".join(list_notes)
+
+def generate_5_chord(root: str) -> str:
+    major_scale = generate_major_scale(root)
+    
+    list_notes = [major_scale[0], major_scale[4]]
+    return "".join(list_notes)
+
+def generate_add9_chord(root: str) -> str:
+    major_scale = generate_major_scale(root)
+    
+    list_notes = [major_scale[0], major_scale[2], major_scale[4], major_scale[1]]
+    return "".join(list_notes)
+
+def generate_maj6_chord(root: str) -> str:
+    major_scale = generate_major_scale(root)
+    
+    list_notes = [major_scale[0], major_scale[2], major_scale[4], major_scale[5]]
+    return "".join(list_notes)
+
+def generate_min6_chord(root: str) -> str:
+    major_scale = generate_major_scale(root)
+    
+    minor_scale = generate_minor_scale(root)
+    
+    list_notes = [minor_scale[0], minor_scale[2], minor_scale[4], major_scale[5]]
+    return "".join(list_notes)
 
 def main():
     while True:
-        
         selection = input("Enter your key of choice: ")
-        
+
         choice = input("Enter major to see the major scale or minor to see the minor scale: ")
         
         if choice == "major":
             output_scale_clean(generate_major_scale(selection), "major")
-            
         else:
             output_scale_clean(generate_minor_scale(selection), "minor")
 
-output_scale_clean(generate_melodic_minor_scale("Ab"),"melodic minor")
-output_scale_clean(generate_melodic_minor_scale("Bb"),"melodic minor")
-output_scale_clean(generate_melodic_minor_scale("Db"),"melodic minor")
-output_scale_clean(generate_melodic_minor_scale("Eb"),"melodic minor")
-output_scale_clean(generate_melodic_minor_scale("Gb"),"melodic minor")
 
+print(generate_minor9_chord("C"))
