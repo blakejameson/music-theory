@@ -28,6 +28,7 @@ User is prompted to choose from following
         - Major9 *
         - Minor 6 *
         - Minor 9*
+        - Dominant 9 (9)
 
     stretch goal: show these notes on a piano in console
 
