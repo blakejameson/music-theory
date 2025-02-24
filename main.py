@@ -114,7 +114,7 @@ def minor_key_uses_flats(key: str):
     return key[1] == "b"
             
 def output_scale_clean(scale: str, mode: str):
-    print("\t\tThe " + scale[0] + f" {mode} scale:")
+    print("\n\tThe " + scale[0] + f" {mode} scale:")
     for note in scale:
         print("%3s   " % (note), end="")
     print()
@@ -310,7 +310,7 @@ def display_options() -> None:
     
 def learn_notes_in_chord() -> None:
     
-    print("In a moment, you will enter the chord of your choice. \n\nThe following types of chords are supported and examples of your input when entering the chord is on the right:\n")
+    print("\nIn a moment, you will enter the chord of your choice. \n\nThe following types of chords are supported and examples of your input when entering the chord is on the right:\n")
     
     chord_types = ["* Major",
           "* Minor",
@@ -330,10 +330,10 @@ def learn_notes_in_chord() -> None:
     result = "\n".join("%-30s %-10s "%(x,y) for x, y in zip(chord_types, examples))
     print(result, end="\n\n\n")
     
-    
+    print("*When wanting to exit this section and go back to the main menu, enter 'q' or 'quit' \n")
     while True:
         # capture chord choice
-        chord_choice = input("\nEnter a chord of your choice, and you will be returned the notes that make up that chord: \n")
+        chord_choice = input("Enter a chord of your choice, and you will be returned the notes that make up that chord. \n")
         if chord_choice == "q" or chord_choice =="quit":
             break
         while not is_valid_chord(chord_choice):
@@ -468,12 +468,37 @@ def decipher_chord_and_return_notes(chord: str) -> None:
         index_min_starts_at = chord.find("min")
         notes = generate_minor_chord(chord[:index_min_starts_at])
         return notes
+    
+def learn_scale_section():
+    
+    key_input = input("Enter the key: ")
+    
+    print("\n\nWhich scale would you like to learn? Enter the number corresponding with your selection.\n\n1) Major Scale\n2) Natural Minor Scale\n3) Harmonic Minor Scale\n4) Melodic Minor Scale\n\n")
+    
+    scale_choice = input()
+    selected_mode = None
+    
+    generated_scale = None
+    if scale_choice == "1":
+        generated_scale = generate_major_scale(key_input)
+        selected_mode = "Major Scale"
+    elif scale_choice == "2":
+        generated_scale = generate_minor_scale(key_input)
+        selected_mode = "Natural Minor Scale"
+    elif scale_choice == "3":
+        generated_scale = generate_harmonic_minor_scale(key_input)
+        selected_mode = "Harmonic Minor Scale"
+    elif scale_choice == "4":
+        generated_scale = generate_melodic_minor_scale(key_input)
+        selected_mode = "Melodic Minor Scale"
+    #print(generated_scale)
         
-        
+    output_scale_clean(generated_scale, selected_mode)
+    
+    
     
 def main():
-    while True:
-        learn_notes_in_chord()
+    
     
     while True:
         display_options()
@@ -483,21 +508,13 @@ def main():
             print("Please select a valid option: ")
             user_decision = input()
             
-        if user_decision == 3:
-            pass
+        if user_decision == "2":
+            learn_scale_section()
+            
+        elif user_decision == "3":
+            learn_notes_in_chord()
             
         
-        
-        
-        selection = input("Enter your key of choice: ")
+    
 
-        choice = input("Enter major to see the major scale or minor to see the minor scale: ")
-        
-        if choice == "major":
-            output_scale_clean(generate_major_scale(selection), "major")
-        else:
-            output_scale_clean(generate_minor_scale(selection), "minor")
-
-
-display_options()
 main()
